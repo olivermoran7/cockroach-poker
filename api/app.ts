@@ -16,7 +16,8 @@ const state: gameState = {
   inLobby: true,
   players: [],
   spectators: [],
-  play: null
+  play: null,
+  playerTurn:  []
 }
 
 let _gameService = new GameService(io, state);
@@ -37,6 +38,12 @@ io.on('connection', (socket) => {
   socket.on(SET_NAME, (name) => {
     _gameService.setName(socket.id, name)
   })
+
+  socket.on('chat message', (message) => {
+    console.log('Received message:', message);
+    // Broadcast the message to all connected clients
+    io.emit('chat message', message);
+  });
 });
 
 // Start the server

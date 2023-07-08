@@ -18,12 +18,22 @@ export class GameService {
     }
 
     public newGame() {
+        // reset the game state
+        this.removePlayerCards();
+
         // create and shuffle cards
         let cards = this.createAndShuffleCards();
 
         // assign cards to players
         this.distributeCards(this._gameState.players, cards);     
     }
+
+    private removePlayerCards(): void {
+        this._gameState.players.forEach((player: Player) => {
+          player.cardsInHand = [];
+          player.cardsFaceUp = [];
+        });
+      }
 
     private createAndShuffleCards(): Card[] {
         const cardTypes: CardType[] = [
