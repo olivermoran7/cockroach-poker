@@ -15,7 +15,14 @@ export class GameService {
         this._gameState = gameState;
     }
 
-    public addClient(socketId: string) {
+	public addSpectator(socketId: string){
+		if (socketId){
+			this._gameState.spectators.push(socketId);
+            console.log(`Added new spectator with socket Id ${socketId}`);
+		}
+	}
+
+    public moveSpectatorToPlayer(socketId: string) {
         if (socketId) {
             const defaultName = 'user' + this.makeId(6);
             
@@ -27,7 +34,9 @@ export class GameService {
             }
 
             this._gameState.players.push(newPlayer);
-            console.log(`Added new client ${defaultName} with connection ${socketId}`);
+            console.log(`Added new player ${defaultName} with connection ${socketId}`);
+
+			this.removeSpectator(socketId);
         }
     }
 
@@ -61,5 +70,12 @@ export class GameService {
 		}
 	   return result;
 	}
-
+    
+	private removeSpectator(socketId: string){
+		const index = this._gameState.spectators.indexOf(socketId);
+		if (index > -1) {
+			this._gameState.spectators.splice(index, 1);
+			console.log(`Removed spectator with socket Id ${socketId}`)
+		}
+	}
 }

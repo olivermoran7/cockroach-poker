@@ -25,8 +25,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 io.on('connection', (socket) => {
+  _gameService.addSpectator(socket.id);
+
   // AddClient();
-  _gameService.addClient(socket.id);
+  //_gameService.addClient(socket.id);
 
   // Emit game state
   _gameService.emitGameState(state);
