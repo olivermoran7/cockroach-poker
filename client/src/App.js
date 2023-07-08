@@ -24,7 +24,7 @@ const startSate = {
   spectators: [],
   playerTurn: ["2"],
   play: {
-    targetPlayer: "1",
+    targetPlayerConnectionId: "1",
     purportedCard: { type: 'Bat' },
     actualCard: { type: 'Bat' }
   },
@@ -48,7 +48,7 @@ function App() {
     // Event handler for receiving messages
     newSocket.on("game state", (receivedGameState) => {
       setMyConnection(newSocket.id);
-      var newGameState = receivedGameState  
+      var newGameState = receivedGameState 
       setGameState(newGameState);
     });
 
@@ -77,7 +77,7 @@ function App() {
   const onSendCard = (card, player) => {
     var newGameState = structuredClone(gameState);
     newGameState.play = {
-      targetPlayer: player.connection,
+      targetPlayerConnectionId: player.connection,
       actualCard: selectedCard,
       purportedCard: card
     }
@@ -123,7 +123,7 @@ function App() {
   const me = () => gameState.players.find(player => player.connection === myConnection);
 
   const activePlayer = () => gameState.players.find(player => player.connection === gameState.playerTurn[gameState.playerTurn.length - 1]);
-  const targetPlayer = () => gameState.players.find(player => player.connection === gameState.play.targetPlayer);
+  const targetPlayer = () => gameState.players.find(player => player.connection === gameState.play.targetPlayerConnectionId);
   const offeredCard = () => gameState.play.purportedCard;
 
   if (gameState === undefined) {

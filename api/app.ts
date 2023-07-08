@@ -2,10 +2,8 @@ import express, { Request, Response } from 'express';
 import { Server } from 'socket.io';
 import http from 'http';
 import { GameService } from './src/game-service/game-service';
-import { SET_NAME, CHAT_MESSAGE, PLAYER_DISCONNECT, SPECTATOR_DISCONNECT, SEND_CARD_TO_PLAYER, ADD_CARD_TO_PLAY, YOUR_CONNECTION, START_GAME } from './src/socket-constants';
+import { SET_NAME, CHAT_MESSAGE, PLAYER_DISCONNECT, SPECTATOR_DISCONNECT, SEND_CARD_TO_PLAYER, ADD_CARD_TO_PLAY, YOUR_CONNECTION, START_GAME, GAME_STATE } from './src/socket-constants';
 import gameState from './src/gameState';
-import { Socket } from 'dgram';
-import { emit } from 'process';
 
 // Create Express app
 const app = express();
