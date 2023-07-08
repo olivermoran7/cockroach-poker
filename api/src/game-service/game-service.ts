@@ -180,6 +180,15 @@ export class GameService {
         if (indexToRemove !== -1) {
             this._gameState.players.splice(indexToRemove, 1);
         }
+
+        if (this._gameState.players.length < 2){
+            this._gameState.inLobby = true;
+            this.resetGame();
+        }
+    }
+
+    private resetGame() {
+        this.removePlayerCards();
     }
 
 	private makeId(length: number) {
