@@ -131,22 +131,20 @@ function App() {
   }
   else {
     return ( 
-      <>
-        {/* Start game */}
-        {
-          gameState.inLobby && gameState.players.length > 1 &&
-          <button onClick={onClickStartGame}>Start game</button>
-        }
+      <div className="app-container">
+      {/* Start game */}
+      {
+        gameState.inLobby && gameState.players.length > 1 &&
+        <button className="start-game-button" onClick={onClickStartGame}>Start game</button>
+      }
 
-
-        {/* Opponents */}
-        <h1>{gameState.inLobby ? "Lobby" : "In game"}</h1>
-        <div style={{"display": "flex", "justifyContent": "space-between" }}>
-          {opponents().map(player => {
-            return <Player name = {player.name} typeCount={countCardTypes(player.cardsFaceUp)} />
-          })
-        }
-        </div>
+      {/* Opponents */}
+      <h1 className="title-text">{gameState.inLobby ? "Lobby" : "In game"}</h1>
+      <div className="opponents-container">
+        {opponents().map(player => {
+          return <Player name={player.name} typeCount={countCardTypes(player.cardsFaceUp)} />
+        })}
+      </div>
 
         {/* Play */}
         {
@@ -184,7 +182,7 @@ function App() {
         </>
         }
 
-      </>
+      </div>
     );
   }
 }
