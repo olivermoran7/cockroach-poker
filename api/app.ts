@@ -2,7 +2,7 @@ import express, { Request, Response } from 'express';
 import { Server } from 'socket.io';
 import http from 'http';
 import { GameService } from './src/game-service/game-service';
-import { SET_NAME, CHAT_MESSAGE, PLAYER_DISCONNECT, SPECTATOR_DISCONNECT, SEND_CARD_TO_PLAYER, ADD_CARD_TO_PLAY, YOUR_CONNECTION } from './src/socket-constants';
+import { SET_NAME, CHAT_MESSAGE, PLAYER_DISCONNECT, SPECTATOR_DISCONNECT, SEND_CARD_TO_PLAYER, ADD_CARD_TO_PLAY, YOUR_CONNECTION, START_GAME } from './src/socket-constants';
 import gameState from './src/gameState';
 import { Socket } from 'dgram';
 
@@ -74,6 +74,10 @@ io.on('connection', (socket) => {
 
   socket.on(ADD_CARD_TO_PLAY, (actualCard, purportedCard, playerSendingCard, playerCardIsSentTo) =>{
     _gameService.addCardToPlay(actualCard, purportedCard, playerSendingCard, playerCardIsSentTo)
+  })
+
+  socket.on(START_GAME, () => {
+    _gameService.newGame();
   })
 
   io.emit(YOUR_CONNECTION, socket.id);
