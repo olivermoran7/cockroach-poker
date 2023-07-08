@@ -1,9 +1,9 @@
 import express, { Request, Response } from 'express';
-import gameState from 'common/src/gameState';
 import { Server } from 'socket.io';
 import http from 'http';
-import { GameService } from './game-service/game-service';
-import { SET_NAME, CHAT_MESSAGE, PLAYER_DISCONNECT, SPECTATOR_DISCONNECT } from 'common/src/socket-constants';
+import { GameService } from './src/game-service/game-service';
+import { SET_NAME, CHAT_MESSAGE, PLAYER_DISCONNECT, SPECTATOR_DISCONNECT } from './src/socket-constants';
+import gameState from './src/gameState';
 
 // Create Express app
 const app = express();

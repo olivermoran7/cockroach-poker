@@ -1,15 +1,15 @@
-import GameState from 'common/src/gameState';
-import { GAME_STATE } from '../../common/src/socket-constants';
+import GameState from '../gameState';
+import { GAME_STATE } from '../socket-constants';
 import { Server } from 'socket.io';
-import Card from 'common/src/card';
-import Player from 'common/src/player';
-import CardType from 'common/src/enums/card-type';
-import Play from 'common/src/play';
+import Card from '../card';
+import Player from '../player';
+import Play from '../play';
+import CardType from '../enums/card-type';
 
 export class GameService {
     private _io: Server;
     private _gameState: GameState; 
-    private readonly _cardPerPlayer = 8;
+    private readonly _cardPerType = 8;
     
     constructor(io: Server,
         gameState: GameState)
@@ -43,24 +43,23 @@ export class GameService {
 
     private createAndShuffleCards(): Card[] {
         const cardTypes: CardType[] = [
-          CardType.Cockroach,
-          CardType.Bat,
-          CardType.Fly,
-          CardType.Toad,
-          CardType.Rat,
-          CardType.Scorpion,
-          CardType.Spider,
-          CardType.StinkBug,
-        ];
-      
+            CardType.Cockroach,
+            CardType.Bat,
+            CardType.Fly,
+            CardType.Toad,
+            CardType.Rat,
+            CardType.Scorpion,
+            CardType.Spider,
+            CardType.StinkBug,
+          ];
+        
         const cards: Card[] = [];
       
-        // Create 8 objects for each card type
-        for (let i = 0; i < this._cardPerPlayer; i++) {
-          cardTypes.forEach((cardType) => {
-            cards.push({ type: cardType });
-          });
-        }
+        for (let i = 0; i < this._cardPerType; i++) {
+            cardTypes.forEach((cardType) => {
+              cards.push({ type: cardType });
+            });
+          }
       
         // Shuffle the cards using Fisher-Yates algorithm
         for (let i = cards.length - 1; i > 0; i--) {
