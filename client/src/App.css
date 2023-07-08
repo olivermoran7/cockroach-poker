@@ -178,7 +178,15 @@
   border: 5px solid #2fa847
 }
 
+.card-targeted {
+  border: 5px solid #2fa847
+}
+
 .player-target:hover {
+  color:rgb(40, 150, 180);
+}
+
+.player-targeted {
   color:rgb(40, 150, 180);
 }
 /* Add any additional styling as needed */
