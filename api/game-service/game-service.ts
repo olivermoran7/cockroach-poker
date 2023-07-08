@@ -1,14 +1,15 @@
 import GameState from 'common/src/gameState';
 import { GAME_STATE } from '../../common/src/socket-constants';
 import { Server } from 'socket.io';
-import { CardType } from 'common/src/enums/card-type';
 import Card from 'common/src/card';
 import Player from 'common/src/player';
+import { CardType } from 'common/src/enums/card-type';
+import Play from 'common/src/play';
 
 export class GameService {
     private _io: Server;
     private _gameState: GameState; 
-    private clients = {};
+    private readonly _cardPerPlayer = 8;
     
     constructor(io: Server,
         gameState: GameState)
@@ -25,7 +26,7 @@ export class GameService {
         let cards = this.createAndShuffleCards();
 
         // assign cards to players
-        this.distributeCards(this._gameState.players, cards);     
+        this.distributeCards(this._gameState.players, cards);
     }
 
     private removePlayerCards(): void {
@@ -50,7 +51,7 @@ export class GameService {
         const cards: Card[] = [];
       
         // Create 8 objects for each card type
-        for (let i = 0; i < 8; i++) {
+        for (let i = 0; i < this._cardPerPlayer; i++) {
           cardTypes.forEach((cardType) => {
             cards.push({ type: cardType });
           });
@@ -127,6 +128,33 @@ export class GameService {
 		
 		return false;
     }
+
+	public addCardToPlay(actualCard: Card, purportedCard: Card, playerAddingCardToPlay: Player, playerCardIsSentTo: Player){
+		this.removeCardFromHand(actualCard, playerAddingCardToPlay.connection);
+		this.sendCardToPlayer(actualCard, purportedCard, playerAddingCardToPlay, playerCardIsSentTo);
+	}
+
+	public sendCardToPlayer(actualCard: Card, purportedCard: Card, playerSendingCard: Player, playerReceivingCard: Player){
+		const play:Play = {
+			targetPlayerConnectionId: playerReceivingCard.connection,
+			actualCard: actualCard,
+			purportedCard: purportedCard
+		}
+
+		this._gameState.playerTurn.push(playerSendingCard.connection);
+
+		this._gameState.play = play;
+	}
+
+	private removeCardFromHand(card: Card, playerId: string){
+		const player = this._gameState.players.filter(o => o.connection == playerId)[0];
+
+		const index = player.cardsInHand.indexOf(card);
+		if (index > -1) {
+			player.cardsInHand.splice(index, 1);
+			console.log(`Removed card of type ${card.type} from player with Id ${playerId}`)
+		}
+	}
 
     public removePlayer(player: Player) {
         const indexToRemove = this._gameState.players.findIndex(p => p === player)

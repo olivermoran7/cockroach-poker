@@ -17,7 +17,7 @@ const state: gameState = {
   players: [],
   spectators: [],
   play: null,
-  playerTurn:  []
+  playerTurn: []
 }
 
 let _gameService = new GameService(io, state);
