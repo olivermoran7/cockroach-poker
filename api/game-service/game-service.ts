@@ -2,6 +2,7 @@ import GameState from 'common/src/gameState';
 import { GAME_STATE } from '../../common/src/socket-constants';
 import { Server } from 'socket.io';
 import player from 'common/src/player';
+import { CardType } from 'common/src/enums/card-type';
 
 export class GameService {
     private _io: Server;
@@ -50,8 +51,22 @@ export class GameService {
 		player.name = name;
 	}
 
-    public isGameOver() {
+    public isGameOver(): boolean {
         // Check if the game is over
+		this._gameState.players.forEach(i => {
+			const cardTypes = Object.values(CardType);
+
+			cardTypes.forEach(j => {
+				var numberOfCardsOfThisTypeFaceUp = i.cardsFaceUp.filter(o => o.type == j).length;
+
+				if (this._gameState.players.length > 2 && numberOfCardsOfThisTypeFaceUp >= 4 ||
+					numberOfCardsOfThisTypeFaceUp >= 5){
+					return true
+				}
+			})
+		})
+		
+		return false;
     }
 
     public removePlayer(player: player) {
