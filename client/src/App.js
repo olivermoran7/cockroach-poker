@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './App.css';
 import io from 'socket.io-client';
 import Player from './Player';
+import CardTargeter from './CardTargeter';
 
 const startSate = {
   players: [
@@ -34,6 +35,7 @@ function App() {
 
   const [gameState, setGameState] = useState(startSate);
   const [myConnection, setMyConnection] = useState(startId);
+  const [selectedCard, setSelectedCard] = useState(null);
 
   useEffect(() => {
     // Create a Socket.IO client instance
@@ -51,6 +53,20 @@ function App() {
       socket.disconnect();
     };
   }, []);
+
+  const onClickSelectCard = (card) => {
+    console.log("clikced");
+    if (meActivePlayer()) {
+      console.log("clikced2");
+      setSelectedCard(card);
+    }
+  }
+
+  const onSendCard = (card, player) => {
+    console.log(card, player);
+  }
+
+  const meActivePlayer = () => activePlayer().connection === me().connection;
 
   const opponents = () => gameState.players.filter(player => player.connection !== myConnection);
   const me = () => gameState.players.find(player => player.connection === myConnection);
@@ -82,9 +98,15 @@ function App() {
         </div>
         }
 
+        {/* Selector */}
+        {
+          selectedCard && <CardTargeter players={opponents()} onConfirm={onSendCard} />
+        }
+
 
         {/* My state */}
-
+        <Player name = {me().name} typeCount={countCardTypes(me().cardsFaceUp)} />
+        {me().cardsInHand.map(card => <div onClick={() => onClickSelectCard(card)}>{card.type}</div>)}
       </>
     );
   }
