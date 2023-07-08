@@ -66,5 +66,5 @@ io.on('connection', (socket) => {
 
 // Start the server
 server.listen(_apiPort, () => {
-  console.log(`Server is running on http://localhost:${_uiPort}`);
+  console.log(`Server is running on http://localhost:${_apiPort}`);
 });
