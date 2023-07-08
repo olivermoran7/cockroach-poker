@@ -2,15 +2,22 @@ import express, { Request, Response } from 'express';
 import { Server } from 'socket.io';
 import http from 'http';
 import { GameService } from './src/game-service/game-service';
-import { SET_NAME, CHAT_MESSAGE, PLAYER_DISCONNECT, SPECTATOR_DISCONNECT, SPECTATOR_BECOMES_PLAYER, SEND_CARD_TO_PLAYER, ADD_CARD_TO_PLAY } from './src/socket-constants';
+import { SET_NAME, CHAT_MESSAGE, PLAYER_DISCONNECT, SPECTATOR_DISCONNECT } from './src/socket-constants';
 import gameState from './src/gameState';
 
 // Create Express app
 const app = express();
-const port = 6969;
+const _apiPort = 6969;
+const _uiPort = 3000;
 
 const server = http.createServer(app);
-const io = new Server(server);
+
+const io = new Server(server, {
+  cors: {
+    origin: `http://localhost:${_uiPort}`,
+    methods: ['GET', 'POST'],
+  },
+});
 
 const ADMIN_COMMANDS = {
   'purge': () => {
@@ -55,21 +62,9 @@ io.on('connection', (socket) => {
   socket.on(SPECTATOR_DISCONNECT, () => {
     _gameService.removeSpectator(socket.id)
   })
-
-  socket.on(SPECTATOR_BECOMES_PLAYER, () => {
-    _gameService.moveSpectatorToPlayer(socket.id)
-  })
-
-  socket.on(SEND_CARD_TO_PLAYER, (purportedCard, playerCardIsSentTo) =>{
-    _gameService.sendCardToPlayer(purportedCard, playerCardIsSentTo)
-  })
-
-  socket.on(ADD_CARD_TO_PLAY, (actualCard, purportedCard, playerSendingCard, playerCardIsSentTo) =>{
-    _gameService.addCardToPlay(actualCard, purportedCard, playerSendingCard, playerCardIsSentTo)
-  })
 });
 
 // Start the server
-server.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
+server.listen(_apiPort, () => {
+  console.log(`Server is running on http://localhost:${_uiPort}`);
 });
