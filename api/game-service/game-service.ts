@@ -16,7 +16,7 @@ export class GameService {
 
     public addClient(socketId: string) {
         if (socketId) {
-            const defaultName = 'user' //+ makeId();
+            const defaultName = 'user' + this.makeId(6);
             
             const newPlayer = {
                 name: defaultName,
