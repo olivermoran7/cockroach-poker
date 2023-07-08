@@ -100,8 +100,22 @@ export class GameService {
 		player.name = name;
 	}
 
-    public isGameOver() {
+    public isGameOver(): boolean {
         // Check if the game is over
+		this._gameState.players.forEach(i => {
+			const cardTypes = Object.values(CardType);
+
+			cardTypes.forEach(j => {
+				var numberOfCardsOfThisTypeFaceUp = i.cardsFaceUp.filter(o => o.type == j).length;
+
+				if (this._gameState.players.length > 2 && numberOfCardsOfThisTypeFaceUp >= 4 ||
+					numberOfCardsOfThisTypeFaceUp >= 5){
+					return true
+				}
+			})
+		})
+		
+		return false;
     }
 
     public removePlayer(player: Player) {
