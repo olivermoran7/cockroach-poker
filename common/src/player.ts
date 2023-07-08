@@ -1,6 +1,6 @@
 import card from "./card";
 
-export default interface player {
+export default interface Player {
     name: string,
     connection: string,
     cardsInHand: card[],
