@@ -6,3 +6,4 @@ export const SPECTATOR_DISCONNECT = 'disconnect';
 // export const SPECTATOR_BECOMES_PLAYER = 'spectator becomes player'
 export const SEND_CARD_TO_PLAYER = 'send card to player'
 export const ADD_CARD_TO_PLAY = 'add card to play'
+export const YOUR_CONNECTION = "your connection"
