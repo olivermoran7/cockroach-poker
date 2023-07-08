@@ -70,10 +70,10 @@ export class GameService {
         return cards;
       }
 
-      private distributeCards(players: Player[], cards: Card[]): void {
+    private distributeCards(players: Player[], cards: Card[]): void {
         const numPlayers = players.length;
         const numCardsPerPlayer = Math.floor(cards.length / numPlayers);
-      
+
         for (let i = 0; i < numPlayers; i++) {
           const player = players[i];
           player.cardsInHand = cards.slice(i * numCardsPerPlayer, (i + 1) * numCardsPerPlayer);
@@ -135,20 +135,27 @@ export class GameService {
 
 	public addCardToPlay(actualCard: Card, purportedCard: Card, playerAddingCardToPlay: Player, playerCardIsSentTo: Player){
 		this.removeCardFromHand(actualCard, playerAddingCardToPlay.connection);
-		this.sendCardToPlayer(actualCard, purportedCard, playerAddingCardToPlay, playerCardIsSentTo);
+        this.setInitialPlay(actualCard, purportedCard, playerCardIsSentTo);
+		this.sendCardToPlayer(purportedCard, playerCardIsSentTo);
 	}
 
-	public sendCardToPlayer(actualCard: Card, purportedCard: Card, playerSendingCard: Player, playerReceivingCard: Player){
-		const play:Play = {
+	public sendCardToPlayer(purportedCard: Card, playerReceivingCard: Player){
+        const playerWhoSentCard = this._gameState.playerTurn[-1]
+		this._gameState.playerTurn.push(playerWhoSentCard);
+
+		this._gameState.play!.purportedCard = purportedCard;
+        this._gameState.play!.targetPlayerConnectionId = playerReceivingCard.connection;
+	}
+
+    private setInitialPlay(actualCard: Card, purportedCard: Card, playerReceivingCard: Player){
+        const play:Play = {
 			targetPlayerConnectionId: playerReceivingCard.connection,
 			actualCard: actualCard,
 			purportedCard: purportedCard
 		}
 
-		this._gameState.playerTurn.push(playerSendingCard.connection);
-
-		this._gameState.play = play;
-	}
+        this._gameState.play = play;
+    }
 
 	private removeCardFromHand(card: Card, playerId: string){
 		const player = this._gameState.players.filter(o => o.connection == playerId)[0];

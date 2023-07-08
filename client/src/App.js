@@ -21,8 +21,12 @@ const startSate = {
     },
   ],
   spectators: [],
-  playerTurn: ["1"],
-  play: null,
+  playerTurn: ["2"],
+  play: {
+    targetPlayer: "1",
+    purportedCard: { type: 'Bat' },
+    actualCard: { type: 'Bat' }
+  },
   inLobby: false,
 };
 
@@ -67,7 +71,35 @@ function App() {
     setGameState(newGameState);
   }
 
+  const onClickTrust = () => {
+    if (gameState.play.actualCard.type === gameState.play.purportedCard.type) {
+      moveCard(activePlayer().connection, activePlayer().connection, gameState.play.actualCard.type);
+    } else {
+      moveCard(activePlayer().connection, targetPlayer().connection, gameState.play.actualCard.type);
+    }
+  }
+
+  const onClickCallBluff = () => {
+    if (gameState.play.actualCard.type === gameState.play.purportedCard.type) {
+      moveCard(activePlayer().connection, targetPlayer().connection, gameState.play.actualCard.type);
+    } else {
+      moveCard(activePlayer().connection, activePlayer().connection, gameState.play.actualCard.type);
+    }
+  }
+
+  const moveCard = (fromPlayerConnection, toPlayerConnection, cardType) => {
+    const newGameState = structuredClone(gameState);
+    const fromPlayer = newGameState.players.find(player => player.connection === fromPlayerConnection);
+    const indexToRemove = fromPlayer.cardsInHand.findIndex(card => card.type === cardType);
+    fromPlayer.cardsInHand.splice(indexToRemove, 1);
+    const toPlayer = newGameState.players.find(player => player.connection === toPlayerConnection);
+    console.log(cardType);
+    toPlayer.cardsFaceUp.push({ type: cardType });
+    setGameState(newGameState);
+  }
+
   const meActivePlayer = () => activePlayer().connection === me().connection;
+  const meTargeted = () => gameState.play && targetPlayer() && targetPlayer().connection === me().connection;
 
   const opponents = () => gameState.players.filter(player => player.connection !== myConnection);
   const me = () => gameState.players.find(player => player.connection === myConnection);
@@ -104,6 +136,13 @@ function App() {
           selectedCard && <CardTargeter players={opponents()} onConfirm={onSendCard} />
         }
 
+        {/* Responder */}
+        {meTargeted() && 
+        <div>
+          <button onClick={onClickTrust}>Trust</button>
+          <button onClick={onClickCallBluff}>Call bluff</button>
+        </div>
+       }
 
         {/* My state */}
         <Player name = {me().name} typeCount={countCardTypes(me().cardsFaceUp)} />
