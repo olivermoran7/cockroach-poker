@@ -1,30 +1,39 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
 import io from 'socket.io-client';
+import Player from './Player';
 
 const startSate = {
   players: [
     {
       name: "Charlie",
-      connection: { socketId: "1" },
+      connection: "1",
       cardsFaceUp: [{ type: 'Bat' }, { type: 'Bat' }, { type: 'Cockroach' }],
       cardsInHand: [{ type: 'Bat' }, { type: 'Cockroach' }, { type: 'Fly' }],
     },
     {
       name: "Hugh",
-      connection: { socketId: "2" },
+      connection: "2",
       cardsFaceUp: [{ type: 'Stink Bug' }, { type: 'Scorpion' } ],
       cardsInHand: [{ type: 'Bat' }, { type: 'Cockroach' }, { type: 'Fly' }],
     },
   ],
   spectators: [],
-  play: null,
+  playerTurn: ["1"],
+  play: {
+    targetPlayer: "2",
+    purportedCard: { type: 'Stink Bug' },
+    actualCard: { type: 'Bat' },
+  },
   inLobby: false,
 };
+
+const startId = "1";
 
 function App() {
 
   const [gameState, setGameState] = useState(startSate);
+  const [myConnection, setMyConnection] = useState(startId);
 
   useEffect(() => {
     // Create a Socket.IO client instance
@@ -43,24 +52,39 @@ function App() {
     };
   }, []);
 
+  const opponents = () => gameState.players.filter(player => player.connection !== myConnection);
+  const me = () => gameState.players.find(player => player.connection === myConnection);
+
+  const activePlayer = () => gameState.players.find(player => player.connection === gameState.playerTurn[gameState.playerTurn.length - 1]);
+  const targetPlayer = () => gameState.players.find(player => player.connection === gameState.play.targetPlayer);
+  const offeredCard = () => gameState.play.actualCard;
+
   if (gameState === undefined) {
     return <p>loading...</p>
   }
   else {
     return (
       <>
+        {/* Opponents */}
         <h1>{gameState.inLobby ? "Lobby" : "In game"}</h1>
         <div style={{"display": "flex", "justifyContent": "space-between" }}>
-          {gameState.players.map(player => {
-            return <div style={{"margin": "1rem", "min-width": "150px" }}>
-              <p>{player.name}</p>
-              <img src="./cardback.png"></img>
-              {countCardTypes(player.cardsFaceUp).map(typeCount => {
-                  return <div>{typeCount.type}x{typeCount.count}</div>
-              })}
-            </div>
-          })}
+          {opponents().map(player => {
+            return <Player name = {player.name} typeCount={countCardTypes(player.cardsFaceUp)} />
+          })
+        }
         </div>
+
+        {/* Play */}
+        {
+          gameState.play && 
+        <div>
+          <p>{activePlayer().name} offers {targetPlayer().name} a {offeredCard().type}</p>
+        </div>
+        }
+
+
+        {/* My state */}
+
       </>
     );
   }
@@ -79,7 +103,7 @@ function countCardTypes(cardsFaceUp) {
   }
   
   const output = [];
-  
+
   for (const type in countMap) {
     output.push({ type, count: countMap[type] });
   }
