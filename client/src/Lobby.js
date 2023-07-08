@@ -11,14 +11,14 @@ const Lobby = () => {
             src="./portsniffer.png" 
             alt="Fullscreen Image"
           />
-          <ReactPlayer
+          {/* <ReactPlayer
             url="./Project 51.mp3"
             playing
             loop
             volume={0.8}
             width="0"
             height="0"
-          />
+          /> */}
         </div>
         )
     } else {

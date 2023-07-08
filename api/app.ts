@@ -56,6 +56,14 @@ io.on('connection', (socket) => {
     io.emit(CHAT_MESSAGE, message);
   });
 
+  socket.on(GAME_STATE, (newGameState) => {
+    // Update the game state
+    _gameService.setGameState(newGameState);
+
+    // Broadcast the updated game state to all connected clients
+    _gameService.emitGameState(newGameState);
+  })
+
   socket.on(PLAYER_DISCONNECT, () => {
     _gameService.removePlayer(socket.id)
     _gameService.emitGameState(state);
@@ -65,10 +73,6 @@ io.on('connection', (socket) => {
     _gameService.removeSpectator(socket.id)
     _gameService.emitGameState(state);
   })
-
-  // socket.on(SPECTATOR_BECOMES_PLAYER, () => {
-  //   _gameService.moveSpectatorToPlayer(socket.id)
-  // })
 
   socket.on(SEND_CARD_TO_PLAYER, (purportedCard, playerCardIsSentTo) =>{
     _gameService.sendCardToPlayer(purportedCard, playerCardIsSentTo)
@@ -86,10 +90,6 @@ io.on('connection', (socket) => {
   })
 });
 
-io.on("game state", (gameState) =>{
-  _gameService.setGameState(gameState);
-  _gameService.emitGameState(gameState);
-})
 
 // Start the server
 server.listen(_apiPort, () => {

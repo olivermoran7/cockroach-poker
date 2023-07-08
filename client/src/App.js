@@ -7,36 +7,11 @@ import Card from './Card';
 import ReactPlayer from 'react-player';
 import ChatBox from './ChatBox';
 
-const startSate = {
-  players: [
-    {
-      name: "Charlie",
-      connection: "1",
-      cardsFaceUp: [{ type: 'Bat' }, { type: 'Bat' }, { type: 'Cockroach' }],
-      cardsInHand: [{ type: 'Bat' }, { type: 'Cockroach' }, { type: 'Fly' }],
-    },
-    {
-      name: "Hugh",
-      connection: "2",
-      cardsFaceUp: [{ type: 'Stink Bug' }, { type: 'Scorpion' } ],
-      cardsInHand: [{ type: 'Bat' }, { type: 'Cockroach' }, { type: 'Fly' }],
-    },
-  ],
-  spectators: [],
-  playerTurn: ["2"],
-  play: {
-    targetPlayerConnectionId: "1",
-    purportedCard: { type: 'Bat' },
-    actualCard: { type: 'Bat' }
-  },
-  inLobby: false,
-};
-
 const startId = "1";
 
 function App() {
 
-  const [gameState, setGameState] = useState(startSate);
+  const [gameState, setGameState] = useState(null);
   const [myConnection, setMyConnection] = useState(startId);
   const [selectedCard, setSelectedCard] = useState(null);
   const [socket, setSocket] = useState(null);
@@ -48,17 +23,26 @@ function App() {
 
     // Event handler for receiving messages
     newSocket.on("game state", (receivedGameState) => {
+      console.log('game state update', gameState)
       setMyConnection(newSocket.id);
-      var newGameState = receivedGameState 
-      setGameState(newGameState);
+      setGameState(receivedGameState);
     });
 
     // Clean up the socket connection on component unmount
     return () => {
+      console.log('cleaning up...')
       setSocket(null);
       newSocket.disconnect();
     };
   }, []);
+
+  // useEffect(() => {
+  //   if (socket && gameState) {
+  //     // Emit the game state whenever it changes
+  //     console.log('emitted game state', gameState)
+  //     socket.emit('game state', gameState);
+  //   }
+  // }, [socket, gameState]);
 
   const onClickSelectCard = (card) => {
     if (meActivePlayer()) {
@@ -71,22 +55,21 @@ function App() {
   }
 
   const emitGame = () => {
-    console.log(gameState);
-    socket.emit("game state", gameState);
+    if (gameState) {
+      console.log(gameState);
+      socket.emit("game state", gameState);
+    }
   }
 
   const onSendCard = (card, player) => {
-    var newGameState = structuredClone(gameState);
-    newGameState.play = {
+    console.log('offer card')
+    //var newGameState = structuredClone(gameState);
+    gameState.play = {
       targetPlayerConnectionId: player.connection,
       actualCard: selectedCard,
       purportedCard: card
     }
-    console.log("before set", newGameState);
-    setGameState(newGameState);
-    console.log("after set", gameState);
-
-    console.log("sending card to regan's stupid server")
+    setGameState(gameState);
     emitGame();
   }
 
@@ -146,14 +129,14 @@ function App() {
     } else {
       return (
       <div className="app-container">
-                  <ReactPlayer
+                  {/* <ReactPlayer
             url="./Project 51.mp3"
             playing
             loop
             volume={0.8}
             width="0"
             height="0"
-          />
+          /> */}
       {/* Start game */}
       {
         gameState.inLobby && gameState.players.length > 1 &&
