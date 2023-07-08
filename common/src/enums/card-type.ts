@@ -1,4 +1,4 @@
-export enum CardType {
+enum CardType {
     Cockroach = 'Cockroach',
     Bat = 'Bat',
     Fly = 'Fly',
@@ -8,3 +8,5 @@ export enum CardType {
     Spider = 'Spider',
     StinkBug = 'Stink Bug',
   }
+
+export default CardType;

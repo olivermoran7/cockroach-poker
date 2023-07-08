@@ -3,7 +3,7 @@ import { GAME_STATE } from '../../common/src/socket-constants';
 import { Server } from 'socket.io';
 import Card from 'common/src/card';
 import Player from 'common/src/player';
-import { CardType } from 'common/src/enums/card-type';
+import CardType from 'common/src/enums/card-type';
 import Play from 'common/src/play';
 
 export class GameService {
