@@ -29,6 +29,11 @@ export class GameService {
         this.distributeCards(this._gameState.players, cards);
     }
 
+    public purge() {
+        for (let p of this._gameState.players) this.removePlayer(p.connection)
+        for (let s of this._gameState.spectators) this.removeSpectator(s)
+    }
+
     private removePlayerCards(): void {
         this._gameState.players.forEach((player: Player) => {
           player.cardsInHand = [];
@@ -156,8 +161,8 @@ export class GameService {
 		}
 	}
 
-    public removePlayer(player: Player) {
-        const indexToRemove = this._gameState.players.findIndex(p => p === player)
+    public removePlayer(connection: string) {
+        const indexToRemove = this._gameState.players.findIndex(p => p.connection === connection)
         if (indexToRemove !== -1) {
             this._gameState.players.splice(indexToRemove, 1);
         }
@@ -173,11 +178,11 @@ export class GameService {
 	   return result;
 	}
 
-	private removeSpectator(socketId: string){
-		const index = this._gameState.spectators.indexOf(socketId);
+	public removeSpectator(connection: string){
+		const index = this._gameState.spectators.indexOf(connection);
 		if (index > -1) {
 			this._gameState.spectators.splice(index, 1);
-			console.log(`Removed spectator with socket Id ${socketId}`)
+			console.log(`Removed spectator with socket Id ${connection}`)
 		}
 	}
 }
