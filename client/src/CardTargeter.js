@@ -14,7 +14,7 @@ var CardTargeter = ({players, onConfirm}) => {
     return (
         <>
         <div style={{display: "flex"}}>
-            {allCards.map(card => <div style={{cursor: "pointer"}} onClick={() => setCard(card)}><Card type={card.type}/></div>)}
+            {allCards.map(card => <div style={{cursor: "pointer"}} onClick={() => setCard(card)}><Card type={card.type} width={"64px"}/></div>)}
         </div>
         <div style={{display: "flex"}}>
             {players.map(player => <div style={{cursor: "pointer"}}  onClick={() => setPlayer(player)}>{player.name}</div>)}

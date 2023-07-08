@@ -1,4 +1,4 @@
-const Card = ({type}) => {
+const Card = ({type, width}) => {
     const map = {
         'Cockroach': "./cards/card_cockroach.png",
         'Bat': "./cards/card_bat.png",
@@ -9,7 +9,7 @@ const Card = ({type}) => {
         'Spider': "./cards/card_spider.png",
         'Stink Bug': "./cards/card_stinkbug.png"
     }
-    return <img style={{width: "32px"}} src={map[type]} alt={type}></img>
+    return <img style={{width: width}} src={map[type]} alt={type}></img>
 } 
 
 export default Card;
