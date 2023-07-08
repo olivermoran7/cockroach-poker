@@ -8,7 +8,7 @@ var CardTargeter = ({players, onConfirm}) => {
 
     var onClickConfirm = () => {
         if (card && targetPlayer) {
-            onConfirm({card, player: targetPlayer});
+            onConfirm(card, targetPlayer);
         }
     }
     return (

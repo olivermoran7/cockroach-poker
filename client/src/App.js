@@ -55,15 +55,19 @@ function App() {
   }, []);
 
   const onClickSelectCard = (card) => {
-    console.log("clikced");
     if (meActivePlayer()) {
-      console.log("clikced2");
       setSelectedCard(card);
     }
   }
 
   const onSendCard = (card, player) => {
     console.log(card, player);
+    var newGameState = structuredClone(gameState);
+    newGameState.play.targetPlayer = player.connection;
+    newGameState.play.actualCard = selectedCard;
+    newGameState.play.purportedCard = card
+    console.log(newGameState)
+    setGameState(newGameState);
   }
 
   const meActivePlayer = () => activePlayer().connection === me().connection;
@@ -73,7 +77,7 @@ function App() {
 
   const activePlayer = () => gameState.players.find(player => player.connection === gameState.playerTurn[gameState.playerTurn.length - 1]);
   const targetPlayer = () => gameState.players.find(player => player.connection === gameState.play.targetPlayer);
-  const offeredCard = () => gameState.play.actualCard;
+  const offeredCard = () => gameState.play.purportedCard;
 
   if (gameState === undefined) {
     return <p>loading...</p>
@@ -92,7 +96,7 @@ function App() {
 
         {/* Play */}
         {
-          gameState.play && 
+        gameState.play && 
         <div>
           <p>{activePlayer().name} offers {targetPlayer().name} a {offeredCard().type}</p>
         </div>
