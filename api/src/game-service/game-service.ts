@@ -20,7 +20,7 @@ export class GameService {
 
     public newGame() {
         this._gameState.inLobby = false;
-        
+
         // reset the game state
         this.removePlayerCards();
 
@@ -29,6 +29,8 @@ export class GameService {
 
         // assign cards to players
         this.distributeCards(this._gameState.players, cards);
+
+        this.setStartingPlayer();
     }
 
     public purge() {
@@ -197,4 +199,12 @@ export class GameService {
 			console.log(`Removed spectator with socket Id ${connection}`)
 		}
 	}
+
+    private setStartingPlayer(){
+        const numberOfPlayers = this._gameState.players.length;
+        const randomPlayerIndex = Math.floor(Math.random() * numberOfPlayers)
+        const randomPlayer = this._gameState.players[randomPlayerIndex];
+
+        this._gameState.playerTurn.push(randomPlayer.connection);
+    }
 }
