@@ -3,6 +3,7 @@ import gameState from 'common/src/gameState';
 import { Server } from 'socket.io';
 import http from 'http';
 import { GameService } from './game-service/game-service';
+import * from 'common/src';
 
 // Create Express app
 const app = express();
@@ -13,7 +14,7 @@ const io = new Server(server);
 
 const state: gameState = {
   inLobby: true,
-  players: [],
+  players: player[],
   spectators: [],
   play: null
 }
