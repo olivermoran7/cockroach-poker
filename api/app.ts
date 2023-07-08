@@ -3,7 +3,7 @@ import gameState from 'common/src/gameState';
 import { Server } from 'socket.io';
 import http from 'http';
 import { GameService } from './game-service/game-service';
-import * from 'common/src';
+import { SET_NAME } from 'common/src/socket-constants';
 
 // Create Express app
 const app = express();
@@ -14,7 +14,7 @@ const io = new Server(server);
 
 const state: gameState = {
   inLobby: true,
-  players: player[],
+  players: [],
   spectators: [],
   play: null
 }
@@ -26,13 +26,13 @@ app.use(express.urlencoded({ extended: false }));
 
 io.on('connection', (socket) => {
   // AddClient();
-  state.spectators.push({socketId: socket.id});
+  _gameService.addClient(socket.id);
 
   // Emit game state
-  _gameService.emitGameState(state)
+  _gameService.emitGameState(state);
 
   // Set name
-  socket.on('set name', (name) => {
+  socket.on(SET_NAME, (name) => {
     _gameService.setName(socket.id, name)
   })
 });
