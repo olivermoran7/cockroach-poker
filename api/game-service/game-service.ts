@@ -21,7 +21,7 @@ export class GameService {
 		}
 	}
 
-    public moveSpecatatorToPlayer(socketId: string) {
+    public moveSpectatorToPlayer(socketId: string) {
         if (socketId) {
             const defaultName = 'user' + this.makeId(6);
             
