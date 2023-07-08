@@ -1,14 +1,14 @@
 import GameState from 'common/src/gameState';
 import { GAME_STATE } from '../../common/src/socket-constants';
 import { Server } from 'socket.io';
-import { CardType } from 'common/src/enums/card-type';
 import Card from 'common/src/card';
 import Player from 'common/src/player';
+import { CardType } from 'common/src/enums/card-type';
 
 export class GameService {
     private _io: Server;
     private _gameState: GameState; 
-    private clients = {};
+    private readonly _cardPerPlayer = 8;
     
     constructor(io: Server,
         gameState: GameState)
@@ -25,7 +25,7 @@ export class GameService {
         let cards = this.createAndShuffleCards();
 
         // assign cards to players
-        this.distributeCards(this._gameState.players, cards);     
+        this.distributeCards(this._gameState.players, cards);
     }
 
     private removePlayerCards(): void {
@@ -50,7 +50,7 @@ export class GameService {
         const cards: Card[] = [];
       
         // Create 8 objects for each card type
-        for (let i = 0; i < 8; i++) {
+        for (let i = 0; i < this._cardPerPlayer; i++) {
           cardTypes.forEach((cardType) => {
             cards.push({ type: cardType });
           });

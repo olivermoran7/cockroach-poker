@@ -16,7 +16,8 @@ const state: gameState = {
   inLobby: true,
   players: [],
   spectators: [],
-  play: null
+  play: null,
+  playerTurn: []
 }
 
 let _gameService = new GameService(io, state);
