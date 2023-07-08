@@ -4,6 +4,7 @@ import io from 'socket.io-client';
 import Player from './Player';
 import CardTargeter from './CardTargeter';
 import Card from './Card';
+import ChatBox from './ChatBox';
 
 const startSate = {
   players: [
@@ -124,7 +125,7 @@ function App() {
     return <p>loading...</p>
   }
   else {
-    return (
+    return ( 
       <>
         {/* Start game */}
         {
@@ -147,8 +148,13 @@ function App() {
         gameState.play && 
         <div>
           <p>{activePlayer().name} offers {targetPlayer().name} a {offeredCard().type}</p>
+          
         </div>
+
+
         }
+
+        <ChatBox></ChatBox>
 
         {/* Selector */}
         {
