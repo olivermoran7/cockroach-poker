@@ -3,6 +3,7 @@ import gameState from 'common/src/gameState';
 import { Server } from 'socket.io';
 import http from 'http';
 import { GameService } from './game-service/game-service';
+import { SET_NAME } from 'common/src/socket-constants';
 
 // Create Express app
 const app = express();
@@ -24,14 +25,18 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 io.on('connection', (socket) => {
+  _gameService.addSpectator(socket.id);
+
   // AddClient();
-  state.spectators.push({socketId: socket.id});
+  //_gameService.addClient(socket.id);
 
   // Emit game state
-  _gameService.emitGameState(state)
+  _gameService.emitGameState(state);
 
   // Set name
-  
+  socket.on(SET_NAME, (name) => {
+    _gameService.setName(socket.id, name)
+  })
 });
 
 // Start the server
