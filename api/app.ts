@@ -76,9 +76,7 @@ io.on('connection', (socket) => {
     _gameService.addCardToPlay(actualCard, purportedCard, playerSendingCard, playerCardIsSentTo)
   })
 
-  socket.on(YOUR_CONNECTION, () => {
-    return socket.id
-  })
+  io.emit(YOUR_CONNECTION, socket.id);
 });
 
 // Start the server
