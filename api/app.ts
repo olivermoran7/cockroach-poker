@@ -85,8 +85,6 @@ io.on('connection', (socket) => {
     _gameService.newGame();
     _gameService.emitGameState(state);
   })
-
-  io.emit(YOUR_CONNECTION, socket.id);
 });
 
 // Start the server
