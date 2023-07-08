@@ -39,6 +39,98 @@
   }
 }
 
+.lobby {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.background-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  transition: opacity 0.5s ease-in-out;
+  z-index: -1;
+}
+
+.start-sniffin {
+  background-color: #fff;
+  color: #000;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.3s ease-in-out;
+}
+
+.start-sniffin:hover {
+  transform: scale(1.1);
+}
+
+.start-sniffin:focus {
+  outline: none;
+}
+
+.lobby.animate .background-image {
+  opacity: 0;
+}
+
+.lobby.animate .start-sniffin {
+  transform: translateY(-100px);
+  opacity: 1;
+}
+
+/* Add the following styles to your CSS file */
+
+.lobby {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.background-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  transition: opacity 0.5s ease-in-out;
+  z-index: -1;
+}
+
+.start-sniffin {
+  background-color: #fff;
+  color: #000;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.3s ease-in-out;
+}
+
+.start-sniffin:hover {
+  transform: scale(1.1);
+}
+
+.start-sniffin:focus {
+  outline: none;
+}
+
+.lobby.animate .background-image {
+  opacity: 0;
+}
+
+.lobby.animate .start-sniffin {
+  transform: translateY(-100px);
+  opacity: 1;
+}
+
 .app-container {
   display: flex;
   flex-direction: column;

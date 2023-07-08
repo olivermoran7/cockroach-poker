@@ -4,6 +4,7 @@ import io from 'socket.io-client';
 import Player from './Player';
 import CardTargeter from './CardTargeter';
 import Card from './Card';
+import ReactPlayer from 'react-player';
 import ChatBox from './ChatBox';
 
 const startSate = {
@@ -125,13 +126,34 @@ function App() {
   const activePlayer = () => gameState.players.find(player => player.connection === gameState.playerTurn[gameState.playerTurn.length - 1]);
   const targetPlayer = () => gameState.players.find(player => player.connection === gameState.play.targetPlayerConnectionId);
   const offeredCard = () => gameState.play.purportedCard;
-
+  
+  var [sniffin, setSniffin] = useState(true);
   if (gameState === undefined) {
     return <p>loading...</p>
   }
   else {
-    return ( 
+    if (sniffin) {
+      return (
+        <div className="lobby">
+          <img
+            className="background-image"
+            src="./portsniffer.png" 
+            alt="Fullscreen Image"
+          />
+        <button onClick={() => setSniffin(false)}>Start sniffin'</button>
+        </div>
+      )
+    } else {
+      return (
       <div className="app-container">
+                  <ReactPlayer
+            url="./Project 51.mp3"
+            playing
+            loop
+            volume={0.8}
+            width="0"
+            height="0"
+          />
       {/* Start game */}
       {
         gameState.inLobby && gameState.players.length > 1 &&
@@ -166,24 +188,24 @@ function App() {
 
         {/* Responder */}
         {meTargeted() && 
-        <div>
-          <button onClick={onClickTrust}>Trust</button>
-          <button onClick={onClickCallBluff}>Call bluff</button>
-        </div>
-       }
+          <div>
+            <button onClick={onClickTrust}>Trust</button>
+            <button onClick={onClickCallBluff}>Call bluff</button>
+          </div>
+        }
 
         {/* My state */}
         {me() &&
         <>
         <Player name = {me().name} typeCount={countCardTypes(me().cardsFaceUp)} />
         <div style={{display: "flex"}}>
-          {me().cardsInHand.map(card => <div style={{cursor: "pointer"}} onClick={() => onClickSelectCard(card)}><Card type={card.type} /></div>)}
+          {me().cardsInHand.map(card => <div style={{cursor: "pointer"}} onClick={() => onClickSelectCard(card)}><Card type={card.type} width={"32px"} /></div>)}
         </div>
         </>
         }
-
-      </div>
-    );
+        </div>
+      );
+    }
   }
 }
 
