@@ -1,3 +1,3 @@
-export default interface card {
-    type: number
+export default interface Card {
+    type: CardType;
 }
