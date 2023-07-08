@@ -80,7 +80,8 @@ export class GameService {
 
         for (let i = 0; i < numPlayers; i++) {
           const player = players[i];
-          player.cardsInHand = cards.slice(i * numCardsPerPlayer, (i + 1) * numCardsPerPlayer);
+          player.cardsInHand = cards.slice(i * numCardsPerPlayer, (i + 1) * numCardsPerPlayer)
+          player.cardsInHand.sort();
         }
     }
 
