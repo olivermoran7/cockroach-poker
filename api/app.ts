@@ -4,6 +4,9 @@ import express, { Request, Response } from 'express';
 const app = express();
 const port = 6969;
 
+// Example using common folder
+const Player = require('common/src/player');
+
 // Define routes
 app.get('/', (req: Request, res: Response) => {
   res.send('Hello, TypeScript with Express!!');
