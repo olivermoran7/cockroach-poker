@@ -124,6 +124,10 @@ export class GameService {
 		player.name = name;
 	}
 
+    public setGameState(gameState: GameState){
+        this._gameState = gameState;
+    }
+
     public isGameOver(): boolean {
         // Check if the game is over
 		this._gameState.players.forEach(i => {
