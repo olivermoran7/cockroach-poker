@@ -3,7 +3,7 @@ import { GAME_STATE } from '../../common/src/socket-constants';
 import { Server } from 'socket.io';
 import Card from 'common/src/card';
 import Player from 'common/src/player';
-import { CardType } from 'common/src/enums/card-type';
+import CardType from 'common/src/enums/card-type';
 import Play from 'common/src/play';
 
 export class GameService {
@@ -27,6 +27,11 @@ export class GameService {
 
         // assign cards to players
         this.distributeCards(this._gameState.players, cards);
+    }
+
+    public purge() {
+        for (let p of this._gameState.players) this.removePlayer(p.connection)
+        for (let s of this._gameState.spectators) this.removeSpectator(s)
     }
 
     private removePlayerCards(): void {
@@ -156,8 +161,8 @@ export class GameService {
 		}
 	}
 
-    public removePlayer(player: Player) {
-        const indexToRemove = this._gameState.players.findIndex(p => p === player)
+    public removePlayer(connection: string) {
+        const indexToRemove = this._gameState.players.findIndex(p => p.connection === connection)
         if (indexToRemove !== -1) {
             this._gameState.players.splice(indexToRemove, 1);
         }
@@ -173,11 +178,11 @@ export class GameService {
 	   return result;
 	}
 
-	private removeSpectator(socketId: string){
-		const index = this._gameState.spectators.indexOf(socketId);
+	public removeSpectator(connection: string){
+		const index = this._gameState.spectators.indexOf(connection);
 		if (index > -1) {
 			this._gameState.spectators.splice(index, 1);
-			console.log(`Removed spectator with socket Id ${socketId}`)
+			console.log(`Removed spectator with socket Id ${connection}`)
 		}
 	}
 }
