@@ -5,6 +5,7 @@ import Player from './Player';
 import CardTargeter from './CardTargeter';
 import Card from './Card';
 import ChatBox from './ChatBox';
+import Lobby from './Lobby';
 
 const startSate = {
   players: [
@@ -125,6 +126,8 @@ function App() {
   const activePlayer = () => gameState.players.find(player => player.connection === gameState.playerTurn[gameState.playerTurn.length - 1]);
   const targetPlayer = () => gameState.players.find(player => player.connection === gameState.play.targetPlayer);
   const offeredCard = () => gameState.play.purportedCard;
+
+  return <Lobby />
 
   if (gameState === undefined) {
     return <p>loading...</p>
