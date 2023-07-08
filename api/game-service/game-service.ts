@@ -1,7 +1,6 @@
 import GameState from 'common/src/gameState';
 import { GAME_STATE } from '../../common/src/socket-constants';
 import { Server } from 'socket.io';
-import connection from 'common/src/connection';
 
 export class GameService {
     private _io: Server;
@@ -15,7 +14,7 @@ export class GameService {
         this._gameState = gameState;
     }
 
-    public addClient(socketId: connection) {
+    public addClient(socketId: string) {
         if (socketId) {
             const defaultName = 'user' //+ makeId();
             
@@ -36,7 +35,7 @@ export class GameService {
     }
 
 	public setName(socketId: string, name: string){
-		const player = this._gameState.players.filter(o => o.connection.socketId == socketId)[0];
+		const player = this._gameState.players.filter(o => o.connection == socketId)[0];
 
 		player.name = name;
 	}
