@@ -1,5 +1,4 @@
 const Card = ({type}) => {
-    console.log(type)
     const map = {
         'Cockroach': "./cards/card_cockroach.png",
         'Bat': "./cards/card_bat.png",

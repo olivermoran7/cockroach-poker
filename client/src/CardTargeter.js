@@ -3,7 +3,6 @@ import allCards from "./allCards";
 import Card from "./Card";
 
 var CardTargeter = ({players, onConfirm}) => {
-    console.log(players)
     var [card, setCard] = useState(null);
     var [targetPlayer, setPlayer] = useState(null);
 

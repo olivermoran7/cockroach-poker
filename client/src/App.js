@@ -42,20 +42,15 @@ function App() {
 
   useEffect(() => {
     // Create a Socket.IO client instance
-    const newSocket = io('http://localhost:6969'); 
+    const newSocket = io('http://localhost:6969');
     setSocket(newSocket);
 
     // Event handler for receiving messages
-    newSocket.on("game state", (gameState) => {
-      var newGameState = gameState  
-      console.log(newGameState);
+    newSocket.on("game state", (receivedGameState) => {
+      setMyConnection(newSocket.id);
+      var newGameState = receivedGameState  
       setGameState(newGameState);
     });
-
-    newSocket.on("your connection", (connection) => {
-      setMyConnection(connection);
-    });
-
 
     // Clean up the socket connection on component unmount
     return () => {
@@ -74,14 +69,24 @@ function App() {
     socket.emit("start game");
   }
 
+  const emitGame = () => {
+    console.log(gameState);
+    socket.emit("game state", gameState);
+  }
+
   const onSendCard = (card, player) => {
     var newGameState = structuredClone(gameState);
     newGameState.play = {
       targetPlayer: player.connection,
-      activePlayer: selectedCard,
+      actualCard: selectedCard,
       purportedCard: card
     }
+    console.log("before set", newGameState);
     setGameState(newGameState);
+    console.log("after set", gameState);
+
+    console.log("sending card to regan's stupid server")
+    emitGame();
   }
 
   const onClickTrust = () => {
@@ -106,9 +111,9 @@ function App() {
     const indexToRemove = fromPlayer.cardsInHand.findIndex(card => card.type === cardType);
     fromPlayer.cardsInHand.splice(indexToRemove, 1);
     const toPlayer = newGameState.players.find(player => player.connection === toPlayerConnection);
-    console.log(cardType);
     toPlayer.cardsFaceUp.push({ type: cardType });
     setGameState(newGameState);
+    emitGame();
   }
 
   const meActivePlayer = () => activePlayer().connection === me().connection;
