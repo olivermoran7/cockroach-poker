@@ -6,6 +6,7 @@ export default interface GameState {
     spectators: string[]
     play: play | null,
     inLobby: boolean
+    playerTurn: string[] // stack of player turns, last is the active player
 }
 
 
