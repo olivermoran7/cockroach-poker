@@ -9,7 +9,7 @@ const app = (0, express_1.default)();
 const port = 6969;
 // Define routes
 app.get('/', (req, res) => {
-    res.send('Hello, TypeScript with Express!!!');
+    res.send('Hello, TypeScript with Express!!');
 });
 // Start the server
 app.listen(port, () => {
