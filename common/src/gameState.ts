@@ -1,9 +1,12 @@
 import player from './player';
 import play from './play';
+import connection from './connection';
 
-export interface gameState {
+export default interface gameState {
     players: player[],
-    play: play | null
+    spectators: connection[]
+    play: play | null,
+    inLobby: boolean
 }
 
 

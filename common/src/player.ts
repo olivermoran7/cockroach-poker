@@ -1,3 +1,6 @@
+import connection from "./connection";
+
 export default interface player {
-    id: number,
+    id: string,
+    connection: connection
 }
