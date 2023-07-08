@@ -4,22 +4,12 @@ import { Server } from 'socket.io';
 import Card from '../card';
 import Player from '../player';
 import Play from '../play';
+import CardType from '../enums/card-type';
 
 export class GameService {
     private _io: Server;
     private _gameState: GameState; 
     private readonly _cardPerType = 8;
-    private _cardTypes: Array<'Cockroach' | 'Bat' | 'Fly' | 'Toad' | 'Rat' | 'Scorpion' | 'Spider' | 'Stink Bug'> = [
-        'Cockroach',
-        'Bat',
-        'Fly',
-        'Toad',
-        'Rat',
-        'Scorpion',
-        'Spider',
-        'Stink Bug',
-      ];
-
     
     constructor(io: Server,
         gameState: GameState)
@@ -52,13 +42,24 @@ export class GameService {
       }
 
     private createAndShuffleCards(): Card[] {
+        const cardTypes: CardType[] = [
+            CardType.Cockroach,
+            CardType.Bat,
+            CardType.Fly,
+            CardType.Toad,
+            CardType.Rat,
+            CardType.Scorpion,
+            CardType.Spider,
+            CardType.StinkBug,
+          ];
+        
         const cards: Card[] = [];
       
-        for (const type of this._cardTypes) {
-            for (let i = 0; i < this._cardPerType; i++) {
-            cards.push({ type });
-            }
-        }
+        for (let i = 0; i < this._cardPerType; i++) {
+            cardTypes.forEach((cardType) => {
+              cards.push({ type: cardType });
+            });
+          }
       
         // Shuffle the cards using Fisher-Yates algorithm
         for (let i = cards.length - 1; i > 0; i--) {
@@ -117,7 +118,7 @@ export class GameService {
     public isGameOver(): boolean {
         // Check if the game is over
 		this._gameState.players.forEach(i => {
-			const cardTypes = Object.values(this._cardTypes);
+			const cardTypes = Object.values(CardType);
 
 			cardTypes.forEach(j => {
 				var numberOfCardsOfThisTypeFaceUp = i.cardsFaceUp.filter(o => o.type == j).length;
