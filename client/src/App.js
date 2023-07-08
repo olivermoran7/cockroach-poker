@@ -37,21 +37,29 @@ function App() {
   const [gameState, setGameState] = useState(startSate);
   const [myConnection, setMyConnection] = useState(startId);
   const [selectedCard, setSelectedCard] = useState(null);
+  const [socket, setSocket] = useState(null);
 
   useEffect(() => {
     // Create a Socket.IO client instance
-    const socket = io('http://localhost:6969'); 
+    const newSocket = io('http://localhost:6969'); 
+    setSocket(newSocket);
 
     // Event handler for receiving messages
-    socket.on("game state", (message) => {
-      var newGameState = JSON.parse(message);
+    newSocket.on("game state", (gameState) => {
+      var newGameState = gameState  
+      console.log(newGameState);
       setGameState(newGameState);
     });
 
+    newSocket.on("your connection", (connection) => {
+      setMyConnection(connection);
+    });
+
+
     // Clean up the socket connection on component unmount
     return () => {
-
-      socket.disconnect();
+      setSocket(null);
+      newSocket.disconnect();
     };
   }, []);
 
@@ -59,6 +67,10 @@ function App() {
     if (meActivePlayer()) {
       setSelectedCard(card);
     }
+  }
+
+  const onClickStartGame = () => {
+    socket.emit("start game");
   }
 
   const onSendCard = (card, player) => {
@@ -114,6 +126,13 @@ function App() {
   else {
     return (
       <>
+        {/* Start game */}
+        {
+          gameState.inLobby && gameState.players.length > 1 &&
+          <button onClick={onClickStartGame}>Start game</button>
+        }
+
+
         {/* Opponents */}
         <h1>{gameState.inLobby ? "Lobby" : "In game"}</h1>
         <div style={{"display": "flex", "justifyContent": "space-between" }}>
@@ -145,10 +164,15 @@ function App() {
        }
 
         {/* My state */}
+        {me() &&
+        <>
         <Player name = {me().name} typeCount={countCardTypes(me().cardsFaceUp)} />
         <div style={{display: "flex"}}>
           {me().cardsInHand.map(card => <div style={{cursor: "pointer"}} onClick={() => onClickSelectCard(card)}><Card type={card.type} /></div>)}
         </div>
+        </>
+        }
+
       </>
     );
   }
