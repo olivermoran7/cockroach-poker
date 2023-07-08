@@ -177,7 +177,7 @@ function App() {
         <>
         <Player name = {me().name} typeCount={countCardTypes(me().cardsFaceUp)} />
         <div style={{display: "flex"}}>
-          {me().cardsInHand.map(card => <div style={{cursor: "pointer"}} onClick={() => onClickSelectCard(card)}><Card type={card.type} /></div>)}
+          {me().cardsInHand.map(card => <div style={{cursor: "pointer"}} onClick={() => onClickSelectCard(card)}><Card type={card.type} width={"32px"} /></div>)}
         </div>
         </>
         }
