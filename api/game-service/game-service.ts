@@ -1,6 +1,7 @@
 import GameState from 'common/src/gameState';
 import { GAME_STATE } from '../../common/src/socket-constants';
 import { Server } from 'socket.io';
+import player from 'common/src/player';
 
 export class GameService {
     private _io: Server;
@@ -40,6 +41,17 @@ export class GameService {
 		player.name = name;
 	}
 
+    public isGameOver() {
+        // Check if the game is over
+    }
+
+    public removePlayer(player: player) {
+        const indexToRemove = this._gameState.players.findIndex(p => p === player)
+        if (indexToRemove !== -1) {
+            this._gameState.players.splice(indexToRemove, 1);
+        }
+    }
+
 	private makeId(length: number) {
 		var result = '';
 		var characters = '0123456789';
@@ -49,4 +61,5 @@ export class GameService {
 		}
 	   return result;
 	}
+
 }
