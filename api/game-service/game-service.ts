@@ -23,4 +23,10 @@ export class GameService {
     public emitGameState(gameState: GameState) {
         this._io.sockets.emit(GAME_STATE, gameState)
     }
+
+	public setName(socketId: string, name: string){
+		const player = this._gameState.players.filter(o => o.connection.socketId == socketId)[0];
+
+		player.name = name;
+	}
 }

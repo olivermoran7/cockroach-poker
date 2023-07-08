@@ -31,7 +31,9 @@ io.on('connection', (socket) => {
   _gameService.emitGameState(state)
 
   // Set name
-  
+  socket.on('set name', (name) => {
+    _gameService.setName(socket.id, name)
+  })
 });
 
 // Start the server
