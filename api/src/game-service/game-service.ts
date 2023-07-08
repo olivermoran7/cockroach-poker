@@ -19,6 +19,8 @@ export class GameService {
     }
 
     public newGame() {
+        this._gameState.inLobby = false;
+        
         // reset the game state
         this.removePlayerCards();
 

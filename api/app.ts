@@ -48,6 +48,7 @@ io.on('connection', (socket) => {
   // Set name
   socket.on(SET_NAME, (name) => {
     _gameService.setName(socket.id, name)
+    _gameService.emitGameState(state);
   })
 
   socket.on(CHAT_MESSAGE, (message) => {
@@ -58,10 +59,12 @@ io.on('connection', (socket) => {
 
   socket.on(PLAYER_DISCONNECT, () => {
     _gameService.removePlayer(socket.id)
+    _gameService.emitGameState(state);
   })
 
   socket.on(SPECTATOR_DISCONNECT, () => {
     _gameService.removeSpectator(socket.id)
+    _gameService.emitGameState(state);
   })
 
   // socket.on(SPECTATOR_BECOMES_PLAYER, () => {
@@ -70,14 +73,17 @@ io.on('connection', (socket) => {
 
   socket.on(SEND_CARD_TO_PLAYER, (purportedCard, playerCardIsSentTo) =>{
     _gameService.sendCardToPlayer(purportedCard, playerCardIsSentTo)
+    _gameService.emitGameState(state);
   })
 
   socket.on(ADD_CARD_TO_PLAY, (actualCard, purportedCard, playerSendingCard, playerCardIsSentTo) =>{
     _gameService.addCardToPlay(actualCard, purportedCard, playerSendingCard, playerCardIsSentTo)
+    _gameService.emitGameState(state);
   })
 
   socket.on(START_GAME, () => {
     _gameService.newGame();
+    _gameService.emitGameState(state);
   })
 
   io.emit(YOUR_CONNECTION, socket.id);
