@@ -84,6 +84,10 @@ export class GameService {
 		if (socketId){
 			this._gameState.spectators.push(socketId);
             console.log(`Added new spectator with socket Id ${socketId}`);
+
+            if (this._gameState.players.length <= 5){
+                this.moveSpectatorToPlayer(socketId);
+            } 
 		}
 	}
 
