@@ -1,8 +1,9 @@
 import GameState from 'common/src/gameState';
 import { GAME_STATE } from '../../common/src/socket-constants';
 import { Server } from 'socket.io';
-import player from 'common/src/player';
 import { CardType } from 'common/src/enums/card-type';
+import Card from 'common/src/card';
+import Player from 'common/src/player';
 
 export class GameService {
     private _io: Server;
@@ -14,6 +15,54 @@ export class GameService {
     {
         this._io = io;
         this._gameState = gameState;
+    }
+
+    public newGame() {
+        // create and shuffle cards
+        let cards = this.createAndShuffleCards();
+
+        // assign cards to players
+        this.distributeCards(this._gameState.players, cards);     
+    }
+
+    private createAndShuffleCards(): Card[] {
+        const cardTypes: CardType[] = [
+          CardType.Cockroach,
+          CardType.Bat,
+          CardType.Fly,
+          CardType.Toad,
+          CardType.Rat,
+          CardType.Scorpion,
+          CardType.Spider,
+          CardType.StinkBug,
+        ];
+      
+        const cards: Card[] = [];
+      
+        // Create 8 objects for each card type
+        for (let i = 0; i < 8; i++) {
+          cardTypes.forEach((cardType) => {
+            cards.push({ type: cardType });
+          });
+        }
+      
+        // Shuffle the cards using Fisher-Yates algorithm
+        for (let i = cards.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [cards[i], cards[j]] = [cards[j], cards[i]];
+        }
+      
+        return cards;
+      }
+
+      private distributeCards(players: Player[], cards: Card[]): void {
+        const numPlayers = players.length;
+        const numCardsPerPlayer = Math.floor(cards.length / numPlayers);
+      
+        for (let i = 0; i < numPlayers; i++) {
+          const player = players[i];
+          player.cardsInHand = cards.slice(i * numCardsPerPlayer, (i + 1) * numCardsPerPlayer);
+        }
     }
 
 	public addSpectator(socketId: string){
@@ -69,7 +118,7 @@ export class GameService {
 		return false;
     }
 
-    public removePlayer(player: player) {
+    public removePlayer(player: Player) {
         const indexToRemove = this._gameState.players.findIndex(p => p === player)
         if (indexToRemove !== -1) {
             this._gameState.players.splice(indexToRemove, 1);
@@ -85,7 +134,7 @@ export class GameService {
 		}
 	   return result;
 	}
-    
+
 	private removeSpectator(socketId: string){
 		const index = this._gameState.spectators.indexOf(socketId);
 		if (index > -1) {
