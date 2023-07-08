@@ -1,5 +1,6 @@
 import { useState } from "react";
 import allCards from "./allCards";
+import Card from "./Card";
 
 var CardTargeter = ({players, onConfirm}) => {
     console.log(players)
@@ -12,11 +13,16 @@ var CardTargeter = ({players, onConfirm}) => {
         }
     }
     return (
-    <div>
-        {allCards.map(card => <div onClick={() => setCard(card)}>{card.type}</div>)}
-        {players.map(player => <div onClick={() => setPlayer(player)}>{player.name}</div>)}
+        <>
+        <div style={{display: "flex"}}>
+            {allCards.map(card => <div style={{cursor: "pointer"}} onClick={() => setCard(card)}><Card type={card.type}/></div>)}
+        </div>
+        <div style={{display: "flex"}}>
+            {players.map(player => <div style={{cursor: "pointer"}}  onClick={() => setPlayer(player)}>{player.name}</div>)}
+        </div>
         <button onClick={onClickConfirm}>Confirm</button>
-    </div>
+        </>
+
     )
 }
 

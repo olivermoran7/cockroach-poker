@@ -3,6 +3,7 @@ import './App.css';
 import io from 'socket.io-client';
 import Player from './Player';
 import CardTargeter from './CardTargeter';
+import Card from './Card';
 
 const startSate = {
   players: [
@@ -21,11 +22,7 @@ const startSate = {
   ],
   spectators: [],
   playerTurn: ["1"],
-  play: {
-    targetPlayer: "2",
-    purportedCard: { type: 'Stink Bug' },
-    actualCard: { type: 'Bat' },
-  },
+  play: null,
   inLobby: false,
 };
 
@@ -61,12 +58,12 @@ function App() {
   }
 
   const onSendCard = (card, player) => {
-    console.log(card, player);
     var newGameState = structuredClone(gameState);
-    newGameState.play.targetPlayer = player.connection;
-    newGameState.play.actualCard = selectedCard;
-    newGameState.play.purportedCard = card
-    console.log(newGameState)
+    newGameState.play = {
+      targetPlayer: player.connection,
+      activePlayer: selectedCard,
+      purportedCard: card
+    }
     setGameState(newGameState);
   }
 
@@ -110,7 +107,9 @@ function App() {
 
         {/* My state */}
         <Player name = {me().name} typeCount={countCardTypes(me().cardsFaceUp)} />
-        {me().cardsInHand.map(card => <div onClick={() => onClickSelectCard(card)}>{card.type}</div>)}
+        <div style={{display: "flex"}}>
+          {me().cardsInHand.map(card => <div style={{cursor: "pointer"}} onClick={() => onClickSelectCard(card)}><Card type={card.type} /></div>)}
+        </div>
       </>
     );
   }
