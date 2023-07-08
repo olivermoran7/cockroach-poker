@@ -7,10 +7,17 @@ import gameState from './src/gameState';
 
 // Create Express app
 const app = express();
-const port = 6969;
+const _apiPort = 6969;
+const _uiPort = 3000;
 
 const server = http.createServer(app);
-const io = new Server(server);
+
+const io = new Server(server, {
+  cors: {
+    origin: `http://localhost:${_uiPort}`,
+    methods: ['GET', 'POST'],
+  },
+});
 
 const ADMIN_COMMANDS = {
   'purge': () => {
@@ -70,6 +77,6 @@ io.on('connection', (socket) => {
 });
 
 // Start the server
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
+server.listen(_apiPort, () => {
+  console.log(`Server is running on http://localhost:${_apiPort}`);
 });
