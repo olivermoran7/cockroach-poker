@@ -1,0 +1,22 @@
+{
+  "name": "cockroach-poker",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Olim1337/cockroach-poker.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Olim1337/cockroach-poker/issues"
+  },
+  "homepage": "https://github.com/Olim1337/cockroach-poker#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
