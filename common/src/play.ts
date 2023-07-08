@@ -1,7 +1,7 @@
 import card from './card';
 
 export default interface play {
-    playerId: number,
+    targetPlayerConnectionId: string,
     actualCard: card,
     purportedCard: card
 }
