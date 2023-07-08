@@ -36,14 +36,6 @@ function App() {
     };
   }, []);
 
-  // useEffect(() => {
-  //   if (socket && gameState) {
-  //     // Emit the game state whenever it changes
-  //     console.log('emitted game state', gameState)
-  //     socket.emit('game state', gameState);
-  //   }
-  // }, [socket, gameState]);
-
   const onClickSelectCard = (card) => {
     if (meActivePlayer()) {
       setSelectedCard(card);
@@ -62,8 +54,6 @@ function App() {
   }
 
   const onSendCard = (card, player) => {
-    console.log('offer card')
-    //var newGameState = structuredClone(gameState);
     gameState.play = {
       targetPlayerConnectionId: player.connection,
       actualCard: selectedCard,
