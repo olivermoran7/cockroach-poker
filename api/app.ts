@@ -11,8 +11,6 @@ const port = 6969;
 const server = http.createServer(app);
 const io = new Server(server);
 
-let _gameService = new GameService(io);
-
 const state: gameState = {
   inLobby: true,
   players: [],
@@ -20,15 +18,18 @@ const state: gameState = {
   play: null
 }
 
+let _gameService = new GameService(io, state);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 io.on('connection', (socket) => {
-  // Add a client when someone connects
+  // AddClient();
   state.spectators.push({socketId: socket.id});
 
   // Emit game state
-  
+  _gameService.emitGameState(state)
+
   // Set name
   
 });
