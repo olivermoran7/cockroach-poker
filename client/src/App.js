@@ -119,14 +119,14 @@ function App() {
     } else {
       return (
       <div className="app-container">
-                  {/* <ReactPlayer
+                  <ReactPlayer
             url="./Project 51.mp3"
             playing
             loop
             volume={0.8}
             width="0"
             height="0"
-          /> */}
+          />
       {/* Start game */}
       {
         gameState.inLobby && gameState.players.length > 1 &&
