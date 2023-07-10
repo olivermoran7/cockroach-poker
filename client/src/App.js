@@ -26,9 +26,7 @@ function App() {
     newSocket.on("game state", (receivedGameState) => {
       console.log('game state update', gameState)
       setMyConnection(newSocket.id);
-      if (!!receivedGameState) {
-        setGameState(receivedGameState);
-      }
+      setGameState(receivedGameState);
     });
 
     // Show the lobby with a fade-in effect on page load
