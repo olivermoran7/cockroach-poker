@@ -17,6 +17,8 @@ function App() {
   const [socket, setSocket] = useState(null);
   const [showLobby, setShowLobby] = useState(false);
 
+  let turn = 1;
+
   useEffect(() => {
     // Create a Socket.IO client instance
     const newSocket = io('http://localhost:6969');
@@ -78,6 +80,9 @@ function App() {
     } else {
       moveCard(activePlayer().connection, targetPlayer().connection, gameState.play.actualCard.type);
     }
+
+    gameState.play = null;
+    nextTurn();
   }
 
   const onClickCallBluff = () => {
@@ -89,13 +94,26 @@ function App() {
   }
 
   const moveCard = (fromPlayerConnection, toPlayerConnection, cardType) => {
-    const newGameState = structuredClone(gameState);
-    const fromPlayer = newGameState.players.find(player => player.connection === fromPlayerConnection);
+
+    const fromPlayer = gameState.players.find(player => player.connection === fromPlayerConnection);
     const indexToRemove = fromPlayer.cardsInHand.findIndex(card => card.type === cardType);
     fromPlayer.cardsInHand.splice(indexToRemove, 1);
-    const toPlayer = newGameState.players.find(player => player.connection === toPlayerConnection);
+    const toPlayer = gameState.players.find(player => player.connection === toPlayerConnection);
     toPlayer.cardsFaceUp.push({ type: cardType });
-    setGameState(newGameState);
+    setGameState(gameState);
+
+    emitGame();
+  }
+
+  const nextTurn = () => {
+    let currentPlayer = activePlayer();
+    let currentIndex = gameState.players.indexOf(currentPlayer);
+    let nextIndex = (currentIndex + 1) % gameState.players.length;
+    let nextPlayer = gameState.players[nextIndex];
+
+    setSelectedCard(null);
+    gameState.playerTurn = [nextPlayer.connection];
+    setGameState(gameState);
     emitGame();
   }
 
@@ -163,7 +181,7 @@ function App() {
 
         {/* Selector */}
         {
-          selectedCard && <CardTargeter players={opponents()} onConfirm={onSendCard} />
+          meActivePlayer() && selectedCard && <CardTargeter players={opponents()} onConfirm={onSendCard} />
         }
         {/* Spacer */}
         {
