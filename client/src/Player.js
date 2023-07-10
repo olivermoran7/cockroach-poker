@@ -1,4 +1,6 @@
-var Player = ({ name, typeCount, opponent, activePlayer }) => {
+import Card from './Card';
+
+var Player = ({ name, typeCount, opponent, activePlayer, selectedCard }) => {
   if (opponent) {
     return (
       <div className="player-container opponent">
@@ -9,7 +11,7 @@ var Player = ({ name, typeCount, opponent, activePlayer }) => {
         {typeCount.map((typeCount) => {
           return (
             <div key={typeCount.type}>
-              {typeCount.type}x {typeCount.count}
+              {typeCount.type} x{typeCount.count}
             </div>
           );
         })}
@@ -29,6 +31,18 @@ var Player = ({ name, typeCount, opponent, activePlayer }) => {
           );
         })}
         <p className={activePlayer === name ? "player-name active" : "player-name"}>{name}</p>
+
+        {/* My selected card */}
+        {selectedCard && (
+          <div className="selected-card">
+            <p>Selected card:</p>
+            <div style={{ display: "flex"}}>
+              <Card
+              className={'no-margin'}
+              type={selectedCard.type} width={"80px"} />
+            </div>
+          </div>
+        )}
       </div>
     );
   }

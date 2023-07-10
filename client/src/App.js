@@ -198,12 +198,19 @@ function App() {
         {/* My state */}
         {me() &&
         <>
-        <Player name = {me().name} typeCount={countCardTypes(me().cardsFaceUp)} opponent={false} activePlayer={activePlayer().name}/>
+        <Player 
+        name = {me().name} 
+        typeCount={countCardTypes(me().cardsFaceUp)} 
+        opponent={false} 
+        activePlayer={activePlayer().name}
+        selectedCard={selectedCard}/>
         <div style={{display: "flex"}}>
-          {me().cardsInHand.map(card => <div style={{cursor: "pointer"}} onClick={() => onClickSelectCard(card)}><Card type={card.type} width={"60px"} /></div>)}
+          {me().cardsInHand.map(card => <div style={{cursor: "pointer"}} onClick={() => onClickSelectCard(card)}>
+            <Card type={card.type} width={"60px"}/></div>)}
         </div>
         </>
         }
+
         </div>
       );
     }
