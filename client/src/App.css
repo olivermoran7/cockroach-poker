@@ -39,11 +39,35 @@
   }
 }
 
-.lobby {
+.lobby-container {
   position: relative;
   width: 100%;
   height: 100vh;
   overflow: hidden;
+  background-color: #222; /* Adjust the color to your preference */
+  color: rgb(255, 255, 255);
+  font-size: 56px;
+  font-weight: 100;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  font-family: 'Luckiest Guy', cursive;
+}
+
+.lobby-content {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-image: url("../public/portsniffer.png");
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  transition: opacity 2s ease-in;
+}
+
+.fade-in {
+  opacity: 1;
 }
 
 .background-image {
@@ -86,12 +110,22 @@
 
 /* Add the following styles to your CSS file */
 
-.lobby {
-  position: relative;
-  width: 100%;
-  height: 100vh;
-  overflow: hidden;
+.flashing-text {
+  position: absolute;
+  bottom: 0;
+  left: 35vw;
+  animation: flashingAnimation 1s linear infinite;
 }
+
+@keyframes flashingAnimation {
+  0%, 49% {
+    opacity: 1;
+  }
+  50%, 100% {
+    opacity: 0;
+  }
+}
+
 
 .background-image {
   position: absolute;
@@ -166,6 +200,7 @@
 .title-text {
   font-size: 70px;
   margin-top: 1%;
+  padding-bottom: 0px;
 }
 
 .face-card {
@@ -173,6 +208,18 @@
   border: 3px solid #000;
   border-radius: 10px;
 }
+
+.card-image {
+  border: 3px solid #000;
+  border-radius: 10px;
+  --_width: 100px;
+  width: var(--_width);
+}
+
+.opponent .card-image {
+  --_width: 40px;
+}
+
 
 .face-card:hover {
   border: 5px solid #2fa847
@@ -189,7 +236,21 @@
 .player-targeted {
   color:rgb(40, 150, 180);
 }
-/* Add any additional styling as needed */
+
+.player-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-right: 1rem;
+  margin-left: 1rem;
+  min-width: 150px;
+  padding-top: 0.5rem;
+}
+
+.player-name.active {
+  color: #a4790b;
+}
 
 body {
   background-image: url('../public/boardback.png');

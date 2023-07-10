@@ -15,6 +15,7 @@ function App() {
   const [myConnection, setMyConnection] = useState(startId);
   const [selectedCard, setSelectedCard] = useState(null);
   const [socket, setSocket] = useState(null);
+  const [showLobby, setShowLobby] = useState(false);
 
   useEffect(() => {
     // Create a Socket.IO client instance
@@ -25,16 +26,26 @@ function App() {
     newSocket.on("game state", (receivedGameState) => {
       console.log('game state update', gameState)
       setMyConnection(newSocket.id);
-      setGameState(receivedGameState);
+      if (!!receivedGameState) {
+        setGameState(receivedGameState);
+      }
     });
+
+    // Show the lobby with a fade-in effect on page load
+    const timer = setTimeout(() => {
+      setShowLobby(true);
+    }, 100); // Delay the fade-in effect for 100 milliseconds
 
     // Clean up the socket connection on component unmount
     return () => {
       console.log('cleaning up...')
       setSocket(null);
       newSocket.disconnect();
+      clearTimeout(timer);
     };
   }, []);
+
+
 
   const onClickSelectCard = (card) => {
     if (meActivePlayer()) {
@@ -96,7 +107,7 @@ function App() {
   const opponents = () => gameState.players.filter(player => player.connection !== myConnection);
   const me = () => gameState.players.find(player => player.connection === myConnection);
 
-  const activePlayer = () => gameState.players.find(player => player.connection === gameState.playerTurn[gameState.playerTurn.length - 1]);
+  const activePlayer = () => gameState.players.find(player => player.connection === gameState.playerTurn[gameState.playerTurn.length - 1]) ?? "";
   const targetPlayer = () => gameState.players.find(player => player.connection === gameState.play.targetPlayerConnectionId);
   const offeredCard = () => gameState.play.purportedCard;
   
@@ -107,19 +118,17 @@ function App() {
   else {
     if (sniffin) {
       return (
-        <div className="lobby">
-          <img
-            className="background-image"
-            src="./portsniffer.png" 
-            alt="Fullscreen Image"
-          />
-        <button onClick={() => setSniffin(false)}>Start sniffin'</button>
+        <div className={`lobby-container`} onClick={() => { setSniffin(false); setShowLobby(false); }}>
+          <div className={`lobby-content ${showLobby ? 'fade-in' : ''}`}>
+            <p style={{ margin: 10 }}>Brought to you by...</p>
+            <p className="flashing-text">Click to begin!</p>
+          </div>
         </div>
       )
     } else {
       return (
       <div className="app-container">
-                  <ReactPlayer
+          <ReactPlayer
             url="./Project 51.mp3"
             playing
             loop
@@ -137,7 +146,7 @@ function App() {
       <h1 className="title-text">{gameState.inLobby ? "Lobby" : "In game"}</h1>
       <div className="opponents-container">
         {opponents().map(player => {
-          return <Player name={player.name} typeCount={countCardTypes(player.cardsFaceUp)} />
+          return <Player name={player.name} typeCount={countCardTypes(player.cardsFaceUp)} opponent={true} activePlayer={activePlayer().name}/>
         })}
       </div>
 
@@ -158,7 +167,10 @@ function App() {
         {
           selectedCard && <CardTargeter players={opponents()} onConfirm={onSendCard} />
         }
-
+        {/* Spacer */}
+        {
+          !selectedCard && <div style={{"height": "15%"}}></div>
+        }
         {/* Responder */}
         {meTargeted() && 
           <div>
@@ -170,7 +182,7 @@ function App() {
         {/* My state */}
         {me() &&
         <>
-        <Player name = {me().name} typeCount={countCardTypes(me().cardsFaceUp)} />
+        <Player name = {me().name} typeCount={countCardTypes(me().cardsFaceUp)} opponent={false} activePlayer={activePlayer().name}/>
         <div style={{display: "flex"}}>
           {me().cardsInHand.map(card => <div style={{cursor: "pointer"}} onClick={() => onClickSelectCard(card)}><Card type={card.type} width={"60px"} /></div>)}
         </div>
