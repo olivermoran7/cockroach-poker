@@ -26,7 +26,6 @@ function App() {
 
     // Event handler for receiving messages
     newSocket.on("game state", (receivedGameState) => {
-      console.log('game state update', gameState)
       setMyConnection(newSocket.id);
       setGameState(receivedGameState);
     });
@@ -48,7 +47,7 @@ function App() {
 
 
   const onClickSelectCard = (card) => {
-    if (meActivePlayer()) {
+    if (meActivePlayer() && gameState.playerTurn.length == 1) {
       setSelectedCard(card);
     }
   }
@@ -59,7 +58,6 @@ function App() {
 
   const emitGame = () => {
     if (gameState) {
-      console.log(gameState);
       socket.emit("game state", gameState);
     }
   }
@@ -81,7 +79,6 @@ function App() {
       moveCard(activePlayer().connection, targetPlayer().connection, gameState.play.actualCard.type);
     }
 
-    gameState.play = null;
     nextTurn();
   }
 
@@ -91,6 +88,18 @@ function App() {
     } else {
       moveCard(activePlayer().connection, activePlayer().connection, gameState.play.actualCard.type);
     }
+
+    nextTurn();
+  }
+
+  const onClickPass = () => {
+    // Add the current target's connection to the turn list
+    gameState.playerTurn.push(gameState.play.targetPlayerConnectionId)
+
+    // The selected card is the original player's card
+    setSelectedCard(gameState.play.actualCard)
+    
+    emitGame();
   }
 
   const moveCard = (fromPlayerConnection, toPlayerConnection, cardType) => {
@@ -106,13 +115,14 @@ function App() {
   }
 
   const nextTurn = () => {
-    let currentPlayer = activePlayer();
-    let currentIndex = gameState.players.indexOf(currentPlayer);
-    let nextIndex = (currentIndex + 1) % gameState.players.length;
-    let nextPlayer = gameState.players[nextIndex];
 
+    // The next turn is the one who last received the card
+    gameState.playerTurn = [gameState.play.targetPlayerConnectionId];
+
+    // Clean up
     setSelectedCard(null);
-    gameState.playerTurn = [nextPlayer.connection];
+    gameState.play = null;
+
     setGameState(gameState);
     emitGame();
   }
@@ -126,6 +136,8 @@ function App() {
   const activePlayer = () => gameState.players.find(player => player.connection === gameState.playerTurn[gameState.playerTurn.length - 1]) ?? "";
   const targetPlayer = () => gameState.players.find(player => player.connection === gameState.play.targetPlayerConnectionId);
   const offeredCard = () => gameState.play.purportedCard;
+
+  const canPass = () => (gameState.playerTurn.length +1 < gameState.players.length)
   
   var [sniffin, setSniffin] = useState(true);
   if (gameState === undefined) {
@@ -181,17 +193,18 @@ function App() {
 
         {/* Selector */}
         {
-          meActivePlayer() && selectedCard && <CardTargeter players={opponents()} onConfirm={onSendCard} />
+          meActivePlayer() && selectedCard && <CardTargeter players={opponents().filter(player => !gameState.playerTurn.includes(player.connection))} onConfirm={onSendCard} />
         }
         {/* Spacer */}
         {
           !selectedCard && <div style={{"height": "15%"}}></div>
         }
         {/* Responder */}
-        {meTargeted() && 
+        {meTargeted() && !gameState.playerTurn.includes(me().connection) &&
           <div>
             <button onClick={onClickTrust}>Trust</button>
             <button onClick={onClickCallBluff}>Call bluff</button>
+            {canPass() && <button onClick={onClickPass}>Pass</button>}
           </div>
         }
 
