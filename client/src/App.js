@@ -6,6 +6,7 @@ import CardTargeter from './CardTargeter';
 import Card from './Card';
 import ReactPlayer from 'react-player';
 import ChatBox from './ChatBox';
+import allCards from './allCards';
 
 const startId = "1";
 
@@ -16,6 +17,7 @@ function App() {
   const [selectedCard, setSelectedCard] = useState(null);
   const [socket, setSocket] = useState(null);
   const [showLobby, setShowLobby] = useState(false);
+  const [showGameOver, setShowGameOver] = useState(null);
 
   let turn = 1;
 
@@ -44,7 +46,10 @@ function App() {
     };
   }, []);
 
-
+  useEffect(() => {
+    console.log('checking if game is over')
+    isGameOver();
+  }, [gameState]);
 
   const onClickSelectCard = (card) => {
     if (meActivePlayer() && gameState.playerTurn.length == 1) {
@@ -53,6 +58,12 @@ function App() {
   }
 
   const onClickStartGame = () => {
+    socket.emit("start game");
+  }
+
+  const onClickRestartGame = () => {
+    // restart the game
+    // TODO: Fix the bug here
     socket.emit("start game");
   }
 
@@ -92,6 +103,28 @@ function App() {
     nextTurn();
   }
 
+  const findLosingPlayer = () => {
+    // Check if the game is over
+    for (const player of gameState.players) {
+      for (const possibleCard of allCards) {
+        const numberOfCardsOfThisTypeFaceUp = player.cardsFaceUp.filter(card => card.type === possibleCard.type).length;
+          if ((gameState.players.length > 2 && numberOfCardsOfThisTypeFaceUp >= 4) || numberOfCardsOfThisTypeFaceUp >= 5) {
+            // Return the loser
+            return player;
+          }
+        }
+      }
+    }
+
+  const isGameOver = () => {
+    if (gameState) {
+      const losingPlayer = findLosingPlayer();
+      if (losingPlayer) {
+        setShowGameOver(losingPlayer)
+      }  
+    }  
+  };
+
   const onClickPass = () => {
     // Add the current target's connection to the turn list
     gameState.playerTurn.push(gameState.play.targetPlayerConnectionId)
@@ -115,7 +148,6 @@ function App() {
   }
 
   const nextTurn = () => {
-
     // The next turn is the one who last received the card
     gameState.playerTurn = [gameState.play.targetPlayerConnectionId];
 
@@ -188,6 +220,18 @@ function App() {
 
 
         }
+
+        {/* Game over */}
+        {showGameOver && (
+          <div className="modal">
+            <div className="modal-content">
+              <h2>Game Over</h2>
+              {<p>The game is over. {findLosingPlayer().name} has lost.</p>}
+              <button onClick={onClickRestartGame}>Restart game</button>
+            </div>
+          </div>
+        )}
+
 
         {/* <ChatBox></ChatBox> */}
 

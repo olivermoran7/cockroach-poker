@@ -75,16 +75,6 @@ io.on('connection', (socket) => {
     _gameService.emitGameState(state);
   })
 
-  // socket.on(SEND_CARD_TO_PLAYER, (purportedCard, playerCardIsSentTo) =>{
-  //   _gameService.sendCardToPlayer(purportedCard, playerCardIsSentTo)
-  //   _gameService.emitGameState(state);
-  // })
-
-  // socket.on(ADD_CARD_TO_PLAY, (actualCard, purportedCard, playerSendingCard, playerCardIsSentTo) =>{
-  //   _gameService.addCardToPlay(actualCard, purportedCard, playerSendingCard, playerCardIsSentTo)
-  //   _gameService.emitGameState(state);
-  // })
-
   socket.on(START_GAME, () => {
     _gameService.newGame();
     _gameService.emitGameState(state);
