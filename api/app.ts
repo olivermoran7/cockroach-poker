@@ -22,6 +22,7 @@ const io = new Server(server, {
 const ADMIN_COMMANDS = {
   'purge': () => {
     _gameService.purge();
+    console.log('PURGED');
   }
 }
 

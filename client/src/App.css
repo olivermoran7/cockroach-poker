@@ -208,6 +208,10 @@
   border-radius: 10px;
 }
 
+.no-margin {
+  margin-inline-start: 0px !important
+}
+
 .card-image {
   border: 3px solid #000;
   border-radius: 10px;
@@ -224,6 +228,10 @@
   border: 5px solid #2fa847
 }
 
+.face-card.clicked {
+  border: 5px solid red;
+}
+
 .card-targeted {
   border: 5px solid #2fa847
 }
@@ -232,8 +240,8 @@
   color:rgb(40, 150, 180);
 }
 
-.player-targeted {
-  color:rgb(40, 150, 180);
+.player-target.clicked {
+  text-shadow: 0 0 10px red
 }
 
 .player-container {
