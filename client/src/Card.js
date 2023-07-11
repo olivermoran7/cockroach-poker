@@ -1,4 +1,4 @@
-const Card = ({ type, width, clicked, className }) => {
+const Card = ({ type, width, clicked, className, inset }) => {
     const map = {
       'Cockroach': "./cards/card_cockroach.png",
       'Bat': "./cards/card_bat.png",
@@ -22,7 +22,7 @@ const Card = ({ type, width, clicked, className }) => {
   
     const combinedClassName = classNames.join(' ');
   
-    return <img className={combinedClassName} style={{ width: width }} src={map[type]} alt={type} />;
+    return <img className={combinedClassName} style={{ width: width, "marginInlineStart": inset ? -35 : 2 }} src={map[type]} alt={type} />;
   };
   
   export default Card;
